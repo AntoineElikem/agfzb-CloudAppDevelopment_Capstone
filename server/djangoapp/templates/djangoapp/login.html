@@ -3,12 +3,13 @@
 <head>
     <title>Login</title>
     <!-- Add Bootstrap CSS -->
+    {% load static %}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
     <div class="container h-100">
         <div class="row h-100 justify-content-center align-items-center">
-            <form method="POST" class="col-4">
+            <form action="{% url 'djangoapp:login' %}" method="POST" class="col-4">
                 {% csrf_token %}
                 <div class="form-group">
                     <label for="username">Username:</label>
