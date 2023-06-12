@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Logged Out</title>
+    <!-- Link to your CSS and JS files -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>You've been logged out successfully</h1>
+        <p>
+            Thank you for visiting our dealership. We hope to see you again soon.
+        </p>
+        <a href="{% url 'djangoapp:login' %}" class="btn btn-primary">Log in again</a>
+    </div>
+</body>
+</html>

@@ -2,18 +2,33 @@
 <html>
 <head>
     <title>Login</title>
+    <!-- Add Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
-    <form method="POST">
-        {% csrf_token %}
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username">
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password">
-        <input type="submit" value="Login">
-    </form>
-    {% if error %}
-        <p>{{ error }}</p>
-    {% endif %}
+    <div class="container h-100">
+        <div class="row h-100 justify-content-center align-items-center">
+            <form method="POST" class="col-4">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" class="form-control">
+                </div>
+                <input type="submit" value="Login" class="btn btn-primary">
+            </form>
+        </div>
+        {% if error %}
+            <div class="row justify-content-center">
+                <p class="text-danger">{{ error }}</p>
+            </div>
+        {% endif %}
+    </div>
+    <!-- Add Bootstrap and JQuery scripts -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 </html>
