@@ -1,27 +1,47 @@
 from django.db import models
-from django.utils.timezone import now
 
+class CarMake(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField()
 
-# Create your models here.
+    def __str__(self):
+        return self.name
 
-# <HINT> Create a Car Make model `class CarMake(models.Model)`:
-# - Name
-# - Description
-# - Any other fields you would like to include in car make model
-# - __str__ method to print a car make object
+class CarModel(models.Model):
+    SEDAN = 'SD'
+    SUV = 'SV'
+    WAGON = 'WG'
+    CAR_CHOICES = [
+        (SEDAN, 'Sedan'),
+        (SUV, 'SUV'),
+        (WAGON, 'Wagon'),
+    ]
+    car_make = models.ForeignKey(CarMake, on_delete=models.CASCADE)
+    dealer_id = models.IntegerField()
+    name = models.CharField(max_length=255)
+    car_type = models.CharField(
+        max_length=2,
+        choices=CAR_CHOICES,
+        default=SEDAN,
+    )
+    year = models.DateField()
 
+    def __str__(self):
+        return self.name
 
-# <HINT> Create a Car Model model `class CarModel(models.Model):`:
-# - Many-To-One relationship to Car Make model (One Car Make has many Car Models, using ForeignKey field)
-# - Name
-# - Dealer id, used to refer a dealer created in cloudant database
-# - Type (CharField with a choices argument to provide limited choices such as Sedan, SUV, WAGON, etc.)
-# - Year (DateField)
-# - Any other fields you would like to include in car model
-# - __str__ method to print a car make object
+class CarDealer():
+    # Assuming a dealer has an id, name, and city
+    def __init__(self, id, name, city):
+        self.id = id
+        self.name = name
+        self.city = city
 
-
-# <HINT> Create a plain Python class `CarDealer` to hold dealer data
-
-
-# <HINT> Create a plain Python class `DealerReview` to hold review data
+class DealerReview():
+    # Assuming a review has an id, dealership, name, purchase, review, and purchase_date
+    def __init__(self, id, dealership, name, purchase, review, purchase_date):
+        self.id = id
+        self.dealership = dealership
+        self.name = name
+        self.purchase = purchase
+        self.review = review
+        self.purchase_date = purchase_date
