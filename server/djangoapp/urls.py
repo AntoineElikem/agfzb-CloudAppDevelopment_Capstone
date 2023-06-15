@@ -10,7 +10,7 @@ urlpatterns = [
     # view refers to the view function
     # name the URL
 
-    path('', views.index, name='index'),
+ path('', views.get_dealerships, name='index'),
 
     # path for about view
    path('about/', views.about, name='about'),
@@ -32,6 +32,7 @@ urlpatterns = [
     path(route='', view=views.get_dealerships, name='index'),
 
     # path for dealer reviews view
+    
 
     # path for add a review view
 
