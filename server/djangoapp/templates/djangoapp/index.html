@@ -60,6 +60,39 @@
       
 
     <!--Add a dealer table here -->
+   <!-- Dealer table -->
+   <div class="container mt-5">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Full Name</th>
+                <th scope="col">Short Name</th>
+                <th scope="col">City</th>
+                <th scope="col">State</th>
+                <th scope="col">Address</th>
+                <th scope="col">Zip</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dealership in dealerships %}
+            <tr>
+                <th scope="row">{{ dealership.id }}</th>
+                <td>{{ dealership.full_name }}</td>
+                <td>{{ dealership.short_name }}</td>
+                <td>{{ dealership.city }}</td>
+                <td>{{ dealership.state }}</td>
+                <td>{{ dealership.address }}</td>
+                <td>{{ dealership.zip }}</td>
+            </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="7">No dealerships available.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
     </body>
 
