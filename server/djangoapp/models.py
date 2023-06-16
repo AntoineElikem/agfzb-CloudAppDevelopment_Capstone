@@ -36,15 +36,20 @@ class CarDealer():
         self.name = name
         self.city = city
 
-class DealerReview():
-    # Assuming a review has an id, dealership, name, purchase, review, and purchase_date
-    def __init__(self, id, dealership, name, purchase, review, purchase_date):
-        self.id = id
-        self.dealership = dealership
-        self.name = name
-        self.purchase = purchase
-        self.review = review
-        self.purchase_date = purchase_date
+class DealerReview(models.Model):
+    dealership = models.IntegerField()
+    name = models.CharField(max_length=255)
+    purchase = models.BooleanField()
+    review = models.TextField()
+    purchase_date = models.DateField()
+    car_make = models.CharField(max_length=255)
+    car_model = models.CharField(max_length=255)
+    car_year = models.IntegerField()
+    sentiment = models.CharField(max_length=255)
+    id = models.AutoField(primary_key=True)
+
+    def __str__(self):
+        return f"{self.name}'s review of dealer {self.dealership}"
 
 class CarDealer:
     def __init__(self, address, city, full_name, id, lat, long, short_name, st, zip):
