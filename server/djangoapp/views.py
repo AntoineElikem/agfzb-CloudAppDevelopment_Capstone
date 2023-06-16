@@ -91,83 +91,82 @@ def get_dealerships(request):
 
 #Your mock data
 mock_reviews = [
-        {
-            "id": 1,
-            "name": "John Doe",
-            "dealership": dealer_id,
-            "review": "This dealership was great! Everyone was very friendly and helpful.",
-            "purchase": True,
-            "purchase_date": "05/02/2023",
-            "car_make": "Audi",
-            "car_model": "A6",
-            "car_year": 2023,
-            "sentiment": "positive"
-        },
-        {
-            "id": 2,
-            "name": "Jane Smith",
-            "dealership": dealer_id,
-            "review": "I had a great experience buying a car here. The staff was friendly and helpful.",
-            "purchase": True,
-            "purchase_date": "12/01/2023",
-            "car_make": "BMW",
-            "car_model": "M3",
-            "car_year": 2023,
-            "sentiment": "positive"
-        },
-        {
-            "id": 3,
-            "name": "Bob Johnson",
-            "dealership": dealer_id,
-            "review": "I had a terrible experience at this dealership. The staff was rude and unhelpful.",
-            "purchase": False,
-            "purchase_date": "03/15/2023",
-            "car_make": "Mercedes",
-            "car_model": "C Class",
-            "car_year": 2023,
-            "sentiment": "negative"
-        },
-        {
-            "id": 4,
-            "name": "Alice Brown",
-            "dealership": dealer_id,
-            "review": "The staff here is very knowledgeable and they have a great selection of cars. I am so happy with my new car!",
-            "purchase": True,
-            "purchase_date": "06/10/2023",
-            "car_make": "Lexus",
-            "car_model": "IS",
-            "car_year": 2023,
-            "sentiment": "positive"
-        },
-        {
-            "id": 5,
-            "name": "Charlie Davis",
-            "dealership": dealer_id,
-            "review": "This dealership has been nothing but trouble. They sold me a faulty car and refuse to take responsibility.",
-            "purchase": True,
-            "purchase_date": "05/15/2023",
-            "car_make": "Ford",
-            "car_model": "Mustang",
-            "car_year": 2023,
-            "sentiment": "negative"
-        },
-        {
-            "id": 6,
-            "name": "Eve Fisher",
-            "dealership": dealer_id,
-            "review": "The staff was not very helpful and they seemed uninterested in helping me find a car that fit my needs.",
-            "purchase": False,
-            "purchase_date": "03/20/2023",
-            "car_make": "Toyota",
-            "car_model": "Camry",
-            "car_year": 2023,
-            "sentiment": "neutral"
-        }
+    {
+        "id": 1,
+        "name": "John Doe",
+        "review": "This dealership was great! Everyone was very friendly and helpful.",
+        "purchase": True,
+        "purchase_date": "05/02/2023",
+        "car_make": "Audi",
+        "car_model": "A6",
+        "car_year": 2023,
+        "sentiment": "positive"
+    },
+    {
+        "id": 2,
+        "name": "Jane Smith",
+        "review": "I had a great experience buying a car here. The staff was friendly and helpful.",
+        "purchase": True,
+        "purchase_date": "12/01/2023",
+        "car_make": "BMW",
+        "car_model": "M3",
+        "car_year": 2023,
+        "sentiment": "positive"
+    },
+    {
+    "id": 7,
+    "name": "Frank Griffin",
+    "review": "The entire process of buying a car here was so easy and smooth. The staff went out of their way to help me. Highly recommend this dealership.",
+    "purchase": True,
+    "purchase_date": "02/15/2023",
+    "car_make": "Tesla",
+    "car_model": "Model S",
+    "car_year": 2023,
+    "sentiment": "positive"
+},
+{
+    "id": 8,
+    "name": "Grace Hamilton",
+    "review": "This dealership is top-notch. They were able to answer all my questions and I never felt pressured into buying a car.",
+    "purchase": True,
+    "purchase_date": "01/12/2023",
+    "car_make": "Audi",
+    "car_model": "Q5",
+    "car_year": 2023,
+    "sentiment": "positive"
+},
+{
+    "id": 9,
+    "name": "Irene Jenkins",
+    "review": "I wasn't impressed with their service. The car I bought had a few problems and they weren't very accommodating about fixing them.",
+    "purchase": True,
+    "purchase_date": "04/20/2023",
+    "car_make": "Subaru",
+    "car_model": "Outback",
+    "car_year": 2023,
+    "sentiment": "negative"
+},
+{
+    "id": 10,
+    "name": "Henry King",
+    "review": "Their staff lacked knowledge about their cars. It made the car buying process a bit difficult.",
+    "purchase": False,
+    "purchase_date": "03/30/2023",
+    "car_make": "Ford",
+    "car_model": "F150",
+    "car_year": 2023,
+    "sentiment": "neutral"
+}
 
-    ]
+    # ... rest of your reviews ...
+]
+
 
 def get_mock_reviews(dealer_id):
+    for review in mock_reviews:
+        review['dealership'] = dealer_id
     return mock_reviews
+
 
 def get_dealer_details(request, dealer_id):
     # Get dealer reviews from the mock data
