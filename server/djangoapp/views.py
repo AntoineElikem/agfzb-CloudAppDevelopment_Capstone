@@ -1,9 +1,12 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseNotAllowed
+
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import CarDealer, DealerReview
-from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf
+from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf, post_request
 #ibm nlu imports
 from ibm_watson import NaturalLanguageUnderstandingV1
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
@@ -141,6 +144,50 @@ def get_dealer_details(request, dealer_id):
 
     # Render the template
     return render(request, 'djangoapp/dealer_details.html', {'reviews': reviews})
+
+
+@login_required
+def add_review(request):
+    """
+    POST a new review
+    """
+    if request.method == 'POST':
+        url = '<your API endpoint url>'
+        dealership = request.POST['dealership']
+        review_text = request.POST['review']
+
+        # Create review dictionary
+        review = {
+            'time': datetime.utcnow().isoformat(),
+            'name': request.user.username,
+            'dealership': dealership,
+            'review': review_text,
+            'purchase': request.POST['purchase'],
+            'purchase_date': request.POST['purchase_date'],
+            'car_make': request.POST['car_make'],
+            'car_model': request.POST['car_model'],
+            'car_year': request.POST['car_year'],
+        }
+
+        # Create json_payload dictionary with review
+        json_payload = {"review": review}
+
+        # POST request
+        response = post_request(url, json_payload, dealerId=dealership)
+
+        if response.status_code == 200:
+            # Save the new review to the database
+            new_review = DealerReview(**review)
+            new_review.save()
+        else:
+            # There was an error with the POST request
+            print("There was an error with the POST request: ", response.text)
+
+        return HttpResponseRedirect('/djangoapp')
+    else:
+        return HttpResponseNotAllowed(['POST'])
+
+
 
 # def get_dealer_details(request, dealer_id):
 #     # Get dealer reviews from the database

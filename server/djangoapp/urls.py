@@ -34,6 +34,9 @@ urlpatterns = [
     # path for get dealer details
     path('dealer/<int:dealer_id>/', views.get_dealer_details, name='dealer_details'),
 
+    # path for adding reviews
+    path('review/add/', views.add_review, name='add_review'),
+
     # path for dealer reviews view
     
 

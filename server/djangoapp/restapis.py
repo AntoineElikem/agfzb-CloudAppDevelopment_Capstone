@@ -83,6 +83,21 @@ def get_dealer_reviews_from_cf(dealer_id):
     return dealer_reviews
 
 
+
+def post_request(url, json_payload, **kwargs):
+    """
+    POST method to send data to a specified URL
+    """
+    response = requests.post(url, params=kwargs, json=json_payload)
+
+    # Check the status of the response
+    status = response.status_code
+    if status != 200 and status != 201:
+        raise Exception(f"Post request failed with status code {status}")
+    else:
+        return response.json()
+
+
 # Create a `get_request` to make HTTP GET requests
 # e.g., response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
 #                                     auth=HTTPBasicAuth('apikey', api_key))
