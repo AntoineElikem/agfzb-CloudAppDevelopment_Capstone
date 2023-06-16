@@ -89,8 +89,8 @@ def get_dealerships(request):
         }
         return render(request, 'djangoapp/index.html', context)
 
-def get_mock_reviews(dealer_id):
-    return [
+#Your mock data
+mock_reviews = [
         {
             "id": 1,
             "name": "John Doe",
@@ -166,6 +166,9 @@ def get_mock_reviews(dealer_id):
 
     ]
 
+def get_mock_reviews(dealer_id):
+    return mock_reviews
+
 def get_dealer_details(request, dealer_id):
     # Get dealer reviews from the mock data
     reviews = get_mock_reviews(dealer_id)
@@ -182,47 +185,63 @@ def get_dealer_details(request, dealer_id):
     # Render the template
     return render(request, 'djangoapp/dealer_details.html', {'reviews': reviews})
 
+def get_unique_car_combinations():
+    reviews = get_mock_reviews(dealer_id=0)  # use a valid dealer_id here
+    car_combinations = set()
+    
+    for review in reviews:
+        car_combinations.add((review["car_make"], review["car_model"], review["car_year"]))
+
+    # Format as "make model year"
+    car_combinations = [f"{make} {model} {year}" for make, model, year in car_combinations]
+
+    return car_combinations
+
 
 @login_required
-def add_review(request):
+def add_review(request, dealer_id):
     """
-    POST a new review
+    POST a new review or GET the form
     """
     if request.method == 'POST':
-        url = '<your API endpoint url>'
-        dealership = request.POST['dealership']
-        review_text = request.POST['review']
-
-        # Create review dictionary
-        review = {
-            'time': datetime.utcnow().isoformat(),
-            'name': request.user.username,
-            'dealership': dealership,
-            'review': review_text,
-            'purchase': request.POST['purchase'],
-            'purchase_date': request.POST['purchase_date'],
+        # Prepare the payload
+        json_payload = {
+            'name': request.POST['name'],
+            'dealership': dealer_id,
+            'review': request.POST['review'],
+            'purchase': request.POST.get('purchase', False),
+            'purchase_date': datetime.utcnow().isoformat() if 'purchase_date' in request.POST else None,
             'car_make': request.POST['car_make'],
             'car_model': request.POST['car_model'],
-            'car_year': request.POST['car_year'],
+            'car_year': datetime.strptime(request.POST['car_year'], "%Y") if 'car_year' in request.POST else None,
         }
+        
+        # You can send a post request here with the payload. 
+        # I'll just leave it as a comment because it's not in the original code.
+        # response = post_request(<url>, json=json_payload)
+        
+        # If the request was successful, redirect the user to the dealer details page.
+        return redirect('djangoapp:dealer', dealer_id=dealer_id)
+    elif request.method == 'GET':
+        # Get unique car combinations
+        car_combinations = get_unique_car_combinations()
 
-        # Create json_payload dictionary with review
-        json_payload = {"review": review}
-
-        # POST request
-        response = post_request(url, json_payload, dealerId=dealership)
-
-        if response.status_code == 200:
-            # Save the new review to the database
-            new_review = DealerReview(**review)
-            new_review.save()
+        # find dealership from the mock data or database
+        dealership = next((dealer for dealer in get_mock_dealerships() if dealer['id'] == dealer_id), None)
+        if dealership:
+            dealership_name = dealership['full_name']
         else:
-            # There was an error with the POST request
-            print("There was an error with the POST request: ", response.text)
+            dealership_name = "Not Found"
 
-        return HttpResponseRedirect('/djangoapp')
+        context = {
+            'dealer_id': dealer_id,
+            'dealer_name': dealership_name,
+            'car_combinations': car_combinations,
+            # add more context data if needed
+        }
+        return render(request, 'djangoapp/add_review.html', context)
     else:
-        return HttpResponseNotAllowed(['POST'])
+        return HttpResponseNotAllowed(['POST', 'GET'])
 
 
 

@@ -37,6 +37,10 @@ urlpatterns = [
     # path for adding reviews
     path('review/add/', views.add_review, name='add_review'),
 
+    # [atj fpr add review]
+    path('add_review/<int:dealer_id>/', views.add_review, name='add_review'),
+
+
     # path for dealer reviews view
     
 
