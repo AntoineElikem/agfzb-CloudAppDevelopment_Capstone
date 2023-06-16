@@ -126,7 +126,44 @@ def get_mock_reviews(dealer_id):
             "car_model": "C Class",
             "car_year": 2023,
             "sentiment": "negative"
+        },
+        {
+            "id": 4,
+            "name": "Alice Brown",
+            "dealership": dealer_id,
+            "review": "The staff here is very knowledgeable and they have a great selection of cars. I am so happy with my new car!",
+            "purchase": True,
+            "purchase_date": "06/10/2023",
+            "car_make": "Lexus",
+            "car_model": "IS",
+            "car_year": 2023,
+            "sentiment": "positive"
+        },
+        {
+            "id": 5,
+            "name": "Charlie Davis",
+            "dealership": dealer_id,
+            "review": "This dealership has been nothing but trouble. They sold me a faulty car and refuse to take responsibility.",
+            "purchase": True,
+            "purchase_date": "05/15/2023",
+            "car_make": "Ford",
+            "car_model": "Mustang",
+            "car_year": 2023,
+            "sentiment": "negative"
+        },
+        {
+            "id": 6,
+            "name": "Eve Fisher",
+            "dealership": dealer_id,
+            "review": "The staff was not very helpful and they seemed uninterested in helping me find a car that fit my needs.",
+            "purchase": False,
+            "purchase_date": "03/20/2023",
+            "car_make": "Toyota",
+            "car_model": "Camry",
+            "car_year": 2023,
+            "sentiment": "neutral"
         }
+
     ]
 
 def get_dealer_details(request, dealer_id):

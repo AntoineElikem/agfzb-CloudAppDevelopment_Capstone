@@ -7,41 +7,86 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 
-    <body>
-
+<body>
     <!-- Nav bar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">Dealership Review</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
+            <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-            <li class="nav-item active">
-              <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <!-- Add more navigation items here -->
-          </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <!-- Add more navigation items here -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'djangoapp:about' %}">About Us</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'djangoapp:contact' %}">Contact Us</a>
+                </li>
+            </ul>
+            {% if user.is_authenticated %}
+                <span class="navbar-text ml-auto">
+                    Welcome, {{ user.first_name }}!
+                </span>
+                <form class="form-inline my-2 my-lg-0 ml-2" action="/djangoapp/logout/" method="post">
+                    {% csrf_token %}
+                    <button class="btn btn-secondary my-2 my-sm-0" type="submit">Logout</button>
+                </form>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link text-primary" href="{% url 'djangoapp:add_review' %}">Add Review</a>
+                    </li>
+                </ul>
+            {% else %}
+                <form class="form-inline my-2 my-lg-0 ml-auto" action="/djangoapp/login/" method="post">
+                    {% csrf_token %}
+                    <input class="form-control mr-sm-2" type="text" name="username" placeholder="Username">
+                    <input class="form-control mr-sm-2" type="password" name="password" placeholder="Password">
+                    <button class="btn btn-primary my-2 my-sm-0" type="submit">Login</button>
+                </form>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link text-primary" href="/djangoapp/signup/">Sign Up</a>
+                    </li>
+                </ul>
+            {% endif %}
         </div>
     </nav>
 
     <!-- Reviews as cards -->
     <div class="container mt-5">
-        {% for review in reviews %}
-        <div class="card mb-3">
-            <div class="card-header">
-                Review by {{ review.name }} on {{ review.purchase_date }}
-            </div>
-            <div class="card-body">
-                <h5 class="card-title">Purchased: {{ review.car_make }} {{ review.car_model }} ({{ review.car_year }})</h5>
-                <p class="card-text">{{ review.review }}</p>
-                <p class="card-text"><small class="text-muted">Sentiment: {{ review.sentiment }}</small></p>
-            </div>
+        <h1 class="mb-4">Reviews for {{ dealerships.full_name }} Dealership</h1> <!-- added header here -->
+        <div class="row">
+            {% for review in reviews %}
+                <div class="col-md-4">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <!-- Map sentiment to emoji -->
+                            {% if review.sentiment == 'positive' %}
+                                <span>😃</span>
+                            {% elif review.sentiment == 'neutral' %}
+                                <span>😐</span>
+                            {% elif review.sentiment == 'negative' %}
+                                <span>😞</span>
+                            {% endif %}
+                            Review by {{ review.name }} on {{ review.purchase_date }}
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Purchased: {{ review.car_make }} {{ review.car_model }} ({{ review.car_year }})</h5>
+                            <p class="card-text">{{ review.review }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% if forloop.counter|divisibleby:3 %}
+                    </div><div class="row">
+                {% endif %}
+            {% empty %}
+                <p>No reviews found</p>
+            {% endfor %}
         </div>
-        {% empty %}
-        <p>No reviews found</p>
-        {% endfor %}
     </div>
-
-    </body>
+</body>
 </html>
