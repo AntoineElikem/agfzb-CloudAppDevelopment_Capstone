@@ -62,37 +62,41 @@
     <!--Add a dealer table here -->
    <!-- Dealer table -->
    <div class="container mt-5">
-    <table class="table">
+    <table class="table" id="table" data-filter-control="true">
         <thead>
             <tr>
                 <th scope="col">ID</th>
-                <th scope="col">Full Name</th>
-                <th scope="col">Short Name</th>
+                <th scope="col">Dealer Name</th>
                 <th scope="col">City</th>
-                <th scope="col">State</th>
                 <th scope="col">Address</th>
                 <th scope="col">Zip</th>
+                <th data-field="state" data-filter-control="select">State</th>
             </tr>
         </thead>
         <tbody>
             {% for dealership in dealerships %}
             <tr>
                 <th scope="row">{{ dealership.id }}</th>
-                <td>{{ dealership.full_name }}</td>
-                <td>{{ dealership.short_name }}</td>
+                <td><a href="{% url 'djangoapp:dealer_details' dealership.id %}">{{ dealership.full_name }}</a></td>
                 <td>{{ dealership.city }}</td>
-                <td>{{ dealership.state }}</td>
                 <td>{{ dealership.address }}</td>
                 <td>{{ dealership.zip }}</td>
+                <td>{{ dealership.st }}</td>
             </tr>
             {% empty %}
                 <tr>
-                    <td colspan="7">No dealerships available.</td>
+                    <td colspan="6">No dealerships available.</td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
+
+<script>
+    $(function() {
+        $('#table').bootstrapTable();
+    });
+</script>
 
     </body>
 
