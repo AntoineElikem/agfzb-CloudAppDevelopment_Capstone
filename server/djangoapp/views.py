@@ -2,8 +2,12 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
-from .models import CarDealer
-from .restapis import get_dealers_from_cf
+from .models import CarDealer, DealerReview
+from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf
+#ibm nlu imports
+from ibm_watson import NaturalLanguageUnderstandingV1
+from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+from ibm_watson.natural_language_understanding_v1 import Features, SentimentOptions
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
@@ -12,6 +16,14 @@ import json
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
+
+# Initialize Watson NLU
+nlu = NaturalLanguageUnderstandingV1(
+    version='2021-03-25',
+    authenticator=IAMAuthenticator('TspZ0ytVRoG-WdrpU_6kmsp9AnM5zieCpN1znEbsHjXZ')
+)
+
+nlu.set_service_url('https://api.au-syd.natural-language-understanding.watson.cloud.ibm.com/instances/5f85e6b0-949f-4daa-a520-a4d4a443c362')
 
 # Create your views here.
 def index(request):
@@ -73,3 +85,76 @@ def get_dealerships(request):
             'dealerships':dealerships
         }
         return render(request, 'djangoapp/index.html', context)
+
+def get_mock_reviews(dealer_id):
+    return [
+        {
+            "id": 1,
+            "name": "John Doe",
+            "dealership": dealer_id,
+            "review": "This dealership was great! Everyone was very friendly and helpful.",
+            "purchase": True,
+            "purchase_date": "05/02/2023",
+            "car_make": "Audi",
+            "car_model": "A6",
+            "car_year": 2023,
+            "sentiment": "positive"
+        },
+        {
+            "id": 2,
+            "name": "Jane Smith",
+            "dealership": dealer_id,
+            "review": "I had a great experience buying a car here. The staff was friendly and helpful.",
+            "purchase": True,
+            "purchase_date": "12/01/2023",
+            "car_make": "BMW",
+            "car_model": "M3",
+            "car_year": 2023,
+            "sentiment": "positive"
+        },
+        {
+            "id": 3,
+            "name": "Bob Johnson",
+            "dealership": dealer_id,
+            "review": "I had a terrible experience at this dealership. The staff was rude and unhelpful.",
+            "purchase": False,
+            "purchase_date": "03/15/2023",
+            "car_make": "Mercedes",
+            "car_model": "C Class",
+            "car_year": 2023,
+            "sentiment": "negative"
+        }
+    ]
+
+def get_dealer_details(request, dealer_id):
+    # Get dealer reviews from the mock data
+    reviews = get_mock_reviews(dealer_id)
+
+    # Analyze sentiment for each review using Watson NLU
+    for review in reviews:
+        response = nlu.analyze(
+            text=review['review'],
+            features=Features(sentiment=SentimentOptions())
+        ).get_result()
+
+        review['sentiment'] = response['sentiment']['document']['label']
+
+    # Render the template
+    return render(request, 'djangoapp/dealer_details.html', {'reviews': reviews})
+
+# def get_dealer_details(request, dealer_id):
+#     # Get dealer reviews from the database
+#     reviews = DealerReview.objects.filter(dealership=dealer_id)
+
+#     # Analyze sentiment for each review using Watson NLU
+#     for review in reviews:
+#         response = nlu.analyze(
+#             text=review.review,
+#             features=Features(sentiment=SentimentOptions())
+#         ).get_result()
+
+#         review.sentiment = response['sentiment']['document']['label']
+
+#     # Render the template
+#     return render(request, 'dealer_details.html', {'reviews': reviews})
+    

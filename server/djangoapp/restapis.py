@@ -40,6 +40,49 @@ def get_dealers_from_cf(url, **kwargs):
             results.append(dealer_obj)
     return results
 
+
+#get dealer reviews from cloud function and database
+
+def get_dealer_reviews_from_cf(dealer_id):
+    # Define the endpoint
+    url = 'https://us-south.functions.appdomain.cloud/api/v1/web/fa20c694-da60-4e79-966f-cd17de8cc10f/dealership-package/review'
+    
+    # Define the query parameters
+    params = {
+        'dealerId': dealer_id
+    }
+    
+    # Make the GET request
+    response = requests.get(url, params=params)
+    
+    # Get the JSON data from the response
+    json_data = response.json()
+
+    # Define a list to hold the DealerReview objects
+    dealer_reviews = []
+    
+    # Loop through the data and create a DealerReview object for each
+    for review in json_data:
+        dealer_review = DealerReview(
+            dealership=review['dealership'],
+            name=review['name'],
+            purchase=review['purchase'],
+            review=review['review'],
+            purchase_date=review['purchase_date'],
+            car_make=review['car_make'],
+            car_model=review['car_model'],
+            car_year=review['car_year'],
+            sentiment='',  # We will fill this in later
+            id=review['id']
+        )
+        
+        # Add the DealerReview object to the list
+        dealer_reviews.append(dealer_review)
+        
+    # Return the list of DealerReview objects
+    return dealer_reviews
+
+
 # Create a `get_request` to make HTTP GET requests
 # e.g., response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
 #                                     auth=HTTPBasicAuth('apikey', api_key))
